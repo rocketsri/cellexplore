@@ -1,0 +1,36 @@
+==========================================================================
+(A) AMORTIZATION: one shared rule + small per-target codes; held-out test
+==========================================================================
+grid 8x8, shared body |theta|=404, code dim d=6, K_train=3, STEPS=18
+  train fidelity per target (shared body, own code): [0.361, 0.684, 0.604]   (39s)
+  HELD-OUT target (body FROZEN, only a 6-param code fit):
+    held-out fidelity (trained body + code) = 0.221
+    control (random body + code)            = 0.462
+    => body generalises beyond its train set: -0.242 above control
+  MARGINAL accounting for the held-out target:
+    DL(held-out target)          = 408 bits
+    marginal shaping |code|      ~ 36 bits (6 params x ~6 bits)
+    marginal generativity  Delta = DL - |code| = +372 bits -- but VOID unless the frozen body generalises: held_fid 0.22 vs control 0.46 -> VOID (body did not generalise)
+  AMORTIZED family accounting (K=3 train + 1 held):
+    describe all 4 targets independently: sum DL   = 1608 bits
+    via shared body + 4 codes:            = 2568 bits (body ~2424, codes ~144)
+
+==========================================================================
+(B) HONEST SCALING: does DL grow Theta(N)? Only if complexity scales.
+==========================================================================
+  fixed blob count (audit's family): DL should be SUB-linear (DL/N falls)
+    N=  100  nb=12(fixed) DL=  520  DL/N=5.20  effdim=1.78
+    N=  400  nb=12(fixed) DL=  928  DL/N=2.32  effdim=2.45
+    N= 1600  nb=12(fixed) DL= 1376  DL/N=0.86  effdim=3.23
+  complexity-scaled family (nb ~ N/8): DL should be ~LINEAR (DL/N ~ const)
+    N=  100  nb=  12(~N/8) DL=  520  DL/N=5.20  effdim=1.78
+    N=  400  nb=  50(~N/8) DL= 1536  DL/N=3.84  effdim=3.66
+    N= 1600  nb= 200(~N/8) DL= 4824  DL/N=3.02  effdim=7.01
+  => Theta(N) generativity is available ONLY for complexity-scaled targets;
+     with |theta| fixed in N, Delta=DL-I grows ~linearly for that family,
+     PROVIDED a low-I shaper can still find the rule (the open O3 frontier).
+
+[done] runtime = 44.2s
+JSON_AMORT_BEGIN
+{"A": {"train_fid": [0.3612947186027919, 0.6838612632374483, 0.6041886221036821], "held_fid": 0.2207557624303351, "ctrl_fid": 0.4624390849997508, "DL_held": 408, "code_bits": 36, "marginal_delta": 372}, "B": [[100, 520], [400, 1536], [1600, 4824]]}
+JSON_AMORT_END
