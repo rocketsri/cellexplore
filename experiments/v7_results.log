@@ -1,0 +1,34 @@
+==========================================================================
+v7: AMORTIZED low-I SELECTION -- scalar ES picks held-out targets on a frozen toolkit
+==========================================================================
+
+[1] one-time toolkit: train shared body by backprop on K_train=24 (amortized cost)
+    toolkit trained: train corr=0.533, body |theta|=1832 (paid ONCE)
+
+[2] per-target SELECTION on the FROZEN toolkit, held-out targets:
+    held-out 0: scalar-ES code corr=0.215 (in 5600 rollouts)  |  backprop code corr=0.627
+    held-out 1: scalar-ES code corr=0.427 (in 5600 rollouts)  |  backprop code corr=-0.012
+    held-out 2: scalar-ES code corr=0.663 (in 5600 rollouts)  |  backprop code corr=0.323
+    held-out 3: scalar-ES code corr=0.195 (in 5600 rollouts)  |  backprop code corr=0.703
+
+    scalar-ES selection (mean held-out corr)   = 0.375
+    backprop  selection (mean held-out corr)   = 0.410
+    scalar-ES on RANDOM body (control)         = 0.079
+
+    => per-target selection IS low-I discoverable: a purely scalar, non-
+       differentiable shaper finds the 12-param code for HELD-OUT targets
+       at corr 0.37 (vs 0.08 on a random body).
+    marginal generativity per target Delta = DL - |code| = 400 - 72
+       = +328 bits, delivered by a genome-like (per-outcome,
+       non-differentiable) selection process; the toolkit is a one-time amortized cost.
+
+[3] per-target selection cost vs code dim d (scalar ES):
+    d= 2 (|code|~12 bits): scalar-ES held-out corr=0.291  [111s]
+    d= 4 (|code|~24 bits): scalar-ES held-out corr=0.401  [145s]
+    d= 8 (|code|~48 bits): scalar-ES held-out corr=0.247  [185s]
+    d=12 (|code|~72 bits): scalar-ES held-out corr=0.506  [224s]
+
+[done] runtime=224s
+JSON_V7_BEGIN
+{"toolkit_train": 0.5325130820274353, "es_sel": 0.37496890872716904, "bp_sel": 0.4102693584281951, "ctrl": 0.07894993718946353, "DL_held": 400.0, "code_bits": 72, "dim_sweep": [[2, 12, 0.2912256196141243], [4, 24, 0.40088503807783127], [8, 48, 0.24658164381980896], [12, 72, 0.506315965205431]]}
+JSON_V7_END
