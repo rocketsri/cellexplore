@@ -1,0 +1,21 @@
+==========================================================================
+v6 / A: AMORTIZATION CURVE -- does held-out generativity emerge with K_train?
+==========================================================================
+grid 8x8, shared body |theta|=596, code dim d=8, STEPS=16
+
+control (random frozen body + 8-dim code) held-out corr = 0.287
+DL(held-out) ~ 400 bits, marginal |code| ~ 48 bits
+
+K_train=  2: train corr=0.507  held-out corr=0.246  margin over control=-0.041  (no)  [40s]
+K_train=  6: train corr=0.511  held-out corr=0.237  margin over control=-0.050  (no)  [99s]
+K_train= 12: train corr=0.253  held-out corr=0.132  margin over control=-0.155  (no)  [156s]
+K_train= 24: train corr=0.149  held-out corr=0.084  margin over control=-0.203  (no)  [213s]
+
+Best K_train=2: held-out 0.246 vs control 0.287 (margin -0.041)
+=> NEGATIVE even at K_train=2: no generic prior emerges under ES; positive marginal gap NOT realised. Bounds the generativity (see notes).
+held-out trend across K_train: [0.246, 0.237, 0.132, 0.084]  (flat/none)
+
+[done] runtime=213s
+JSON_V6_BEGIN
+{"control": 0.28675419468311286, "DL_held": 400.0, "code_bits": 48, "rows": [[2, 0.5071944706571649, 0.24620490901200268, -0.040549285671110186], [6, 0.5113747891545862, 0.23701731006902158, -0.04973688461409129], [12, 0.25320922762089154, 0.13184578091032154, -0.15490841377279133], [24, 0.1489043349828065, 0.08374843838035817, -0.2030057563027547]], "best_K": 2, "best_margin": -0.040549285671110186}
+JSON_V6_END
