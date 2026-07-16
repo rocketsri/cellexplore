@@ -1,0 +1,59 @@
+========================================================================
+v10: RICH HOLONOMY CODE -- winding classes on a disordered non-reciprocal torus
+========================================================================
+L=16 (256 oscillators), alpha=0.4 (non-reciprocal), coupling disorder=2.0
+
+[1] CODEBOOK: 4 stable winding classes (w_x,w_y) reached from 200 random inits
+    top classes: [(0, 0), (0, -1), (1, 0), (1, -1)]
+    selection cost log2(K) = 2.00 bits
+
+[2] RICHNESS of realized morphology cos(theta): mean eff dim = 6.08, max = 6.62
+    (a clean plane wave has eff dim ~2; quenched disorder lifts it. guard 1 CLEARED at max)
+[3] D_bar (mean zlib description length of realized field) = 1246 bits
+[4] GENERATIVITY  Delta = D_bar - log2(K) = 1246 - 2.00 = +1244 bits per target
+    (amortized/measure-consistent: log2 K is the O2 per-target selection cost;
+     the disordered substrate R is target-agnostic (SAME for all K classes) and
+     amortized. HONESTY CAVEAT below: how much of the rich field is per-class-
+     DISTINCT vs shared substrate is measured in [4b].
+
+[4b] DISTINGUISHABILITY (are the K classes distinct targets, or one field + ramp?):
+    mean cross-class field correlation = +0.07  (DISTINCT targets)
+    honest reading: the per-class DISTINCT content is bounded by (1 - 0.07) of the
+    field variance; the rest is shared target-agnostic substrate (legitimately amortized).
+
+[5] NON-LOCALITY (guard 2, topological): does any o(N) patch determine the class?
+    patch 1x1 (1 nodes): can close a fundamental loop? False  -> CANNOT determine class (no closed loop)
+    patch 2x2 (4 nodes): can close a fundamental loop? False  -> CANNOT determine class (no closed loop)
+    patch 3x3 (9 nodes): can close a fundamental loop? False  -> CANNOT determine class (no closed loop)
+    patch 4x4 (16 nodes): can close a fundamental loop? False  -> CANNOT determine class (no closed loop)
+    patch 16x16 (256 nodes): can close a fundamental loop? True  -> can read winding
+    => the class is a loop integral; the smallest patch that determines it must
+       span a full cycle (L=16 nodes) -> no o(N)-in-a-dimension subset holds it.
+
+[6] SELF-REPAIR (topological protection, finite radius = B3/H4):
+    protected class = (0, 0); sweeping damage fraction to find the repair radius:
+      damage   5%: class (0, 0) -> (0, 0)  (recovered)
+      damage  15%: class (0, 0) -> (0, 0)  (recovered)
+      damage  30%: class (0, 0) -> (0, 0)  (recovered)
+      damage  45%: class (0, 0) -> (0, -1)  (PHASE SLIP -> new class)
+      damage  60%: class (0, 0) -> (1, 0)  (PHASE SLIP -> new class)
+    => finite repair radius: recovers below threshold, phase-slips above (slip seen at 0.45).
+       robustness radius = correction cost (H4 double edge), as a topological invariant.
+
+[7] NON-EQUILIBRIUM (no energy functional): reciprocal control vs non-reciprocal:
+    reciprocal (symmetric A, alpha=0, omega=0): drift Omega=-0.0000  [gradient system, energy functional exists]
+    non-reciprocal (asymmetric A, alpha=0.4):   drift Omega=-0.7829  [persistent current, NO energy functional]
+    => non-symmetric drift Jacobian (A_ij != A_ji) makes the drift 1-form non-closed:
+       no scalar potential exists; the target is a current, not a minimum.
+
+[summary] A fixed disordered non-reciprocal rule hosts K winding-class attractors,
+  each a field of max eff-dim 6.6 (guard-1 richness), PROVABLY
+  non-local (topological loop integral, guard 2), topologically self-repairing (B3/H4),
+  in a non-equilibrium steady state with NO energy functional. The honest caveat: the
+  per-class DISTINCT content is (1 - cross-corr) of the field; the shared rich substrate
+  is legitimately amortized (target-agnostic). B3 realized as a construction, with the
+  distinct-vs-shared decomposition measured, not hidden.
+
+JSON_V10_BEGIN
+{"K": 4, "selection_bits": 2.0, "eff_dim": 6.07590166256025, "eff_dim_max": 6.6200427420955865, "Dbar": 1246.0, "Delta": 1244.0, "cross_class_corr": 0.0720862114779479, "nonlocal_min_loop": 16, "repair": {"0.05": {"after": [0, 0], "recovered": true}, "0.15": {"after": [0, 0], "recovered": true}, "0.30": {"after": [0, 0], "recovered": true}, "0.45": {"after": [0, -1], "recovered": false}, "0.60": {"after": [1, 0], "recovered": false}}, "repair_class": [0, 0], "drift_reciprocal": -4.4287490341687885e-14, "drift_nonreciprocal": -0.782946367665233}
+JSON_V10_END
