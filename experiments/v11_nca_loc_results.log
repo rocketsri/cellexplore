@@ -1,0 +1,21 @@
+======================================================================
+v11: localization spectrum on the NCA codebook (dim_sel = distinct targets?)
+======================================================================
+trained NCA body |theta|=1832, train corr=0.569
+
+  dim_sel (effective # of DISTINCT target morphologies) = 4.29
+  dim_rule (structure the body commands)                = 3.92
+  G = dim_rule/dim_sel                                  = 0.91
+  healing (ablate half, recover)                        = 0.15
+
+  COMPARISON (dim_sel is the discriminator):
+    NCA codebook (genuine):   dim_sel = 4.3  (distinct targets)
+    Holonomy Code (v11):      dim_sel ~ 1.0  (trivial selection; eta^2=1.3%)
+    StoredVec (Claim A):      dim_rule ~ 0   (no substrate structure)
+  => genuine generativity = high dim_rule AND dim_sel>>1 (selection carries
+     distinct targets). NCA passes; Holonomy has high G but trivial dim_sel.
+
+[done] 340s
+JSON_NCALOC_BEGIN
+{"dim_sel": 4.2930006980896, "dim_rule": 3.9171934127807617, "G": 0.9124604646841697, "heal": 0.14832032661900657, "train": 0.5694972276687622}
+JSON_NCALOC_END
