@@ -1,0 +1,19 @@
+==============================================================================
+v9: CPPN DEVELOPMENTAL encoding vs RANDOM PROJECTION at EQUAL search dim
+==============================================================================
+grid 8x8, body |theta|=1832 (HID=32), code dim d=12, STEPS=20
+
+control (random frozen body + scalar-ES code): held-out corr = 0.218
+[v6 baseline: DENSE ES on full 1832-dim body -> held-out margin NEGATIVE]
+
+  d_g= 108 (Hc= 6) | CPPN: train=0.259 held-out=0.263 (margin +0.044) || RandProj: train=0.241 held-out=0.088 (margin -0.131) || STRUCT EDGE (CPPN-RP)=+0.175  [328s]
+  d_g= 204 (Hc=12) | CPPN: train=0.272 held-out=0.342 (margin +0.123) || RandProj: train=0.462 held-out=0.544 (margin +0.326) || STRUCT EDGE (CPPN-RP)=-0.202  [620s]
+
+  best CPPN d_g=204: held-out 0.342 (margin +0.123); matched RandProj 0.544
+  Delta_marginal ceiling = |g| = 204 params (the Thm bound on amortized generativity)
+  => RANDOM PROJECTION generalises but CPPN does not: developmental bias HURTS here.
+
+[done] runtime=620s
+JSON_V9_BEGIN
+{"control": 0.21842485759807762, "BODY": 1832, "K_train": 12, "rows": [{"Hc": 6, "dg": 108, "cppn_tr": 0.2586710082278448, "cppn_ho": 0.2627530901315259, "rp_tr": 0.24065620713313274, "rp_ho": 0.08785888967675833, "cppn_margin": 0.04432823253344831, "rp_margin": -0.1305659679213193, "struct_edge": 0.1748942004547676}, {"Hc": 12, "dg": 204, "cppn_tr": 0.2722691503914572, "cppn_ho": 0.3416910479013558, "rp_tr": 0.4616067977018425, "rp_ho": 0.5441020382141406, "cppn_margin": 0.12326619030327818, "rp_margin": 0.325677180616063, "struct_edge": -0.2024109903127848}]}
+JSON_V9_END

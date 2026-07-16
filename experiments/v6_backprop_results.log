@@ -1,0 +1,22 @@
+==========================================================================
+v6 / A-existence arm (BACKPROP): does a generic shared prior EXIST?
+==========================================================================
+grid 8x8, shared body |theta|=1832, code dim d=12, STEPS=24
+(backprop = high-bandwidth; certifies architectural existence only, NOT a B-bio claim)
+
+control (random frozen body + code, backprop) held-out corr = 0.079
+DL(held-out) ~ 400 bits, marginal |code| ~ 72 bits
+
+K_train=  2: train corr=0.948  held-out corr=0.646  margin over control=+0.567  [69s]
+K_train=  6: train corr=0.534  held-out corr=0.181  margin over control=+0.102  [117s]
+K_train= 12: train corr=0.782  held-out corr=0.678  margin over control=+0.599  [171s]
+K_train= 24: train corr=0.771  held-out corr=0.781  margin over control=+0.702  [232s]
+
+Best K_train=24: held-out 0.781 (margin +0.702 over control)
+held-out trend across K_train: [0.646, 0.181, 0.678, 0.781]
+=> EXISTENCE CONFIRMED (Q1 yes): a generic frozen body + 12-param code reaches held-out targets. Marginal Delta = 400-72 = +328 bits exists architecturally.
+
+[done] runtime=232s
+JSON_BP_BEGIN
+{"control": 0.07894993718946353, "DL_held": 400.0, "code_bits": 72, "rows": [[2, 0.9477185010910034, 0.645716518163681, 0.5667665809742175], [6, 0.5340854525566101, 0.1813623607158661, 0.10241242352640256], [12, 0.7821021676063538, 0.6777907907962799, 0.5988408536068164], [24, 0.7714967727661133, 0.7810495048761368, 0.7020995676866733]], "best_K": 24}
+JSON_BP_END

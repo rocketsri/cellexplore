@@ -1,0 +1,73 @@
+==========================================================================
+v5 / O1: LOW-BANDWIDTH (evolutionary) shaping of a shared local rule
+==========================================================================
+grid N = 100 cells, C = 8 channels, genome |theta| = 404 params, STEPS = 20
+
+[1] TARGET richness (guard 1: must be rich, not constant/low-D):
+    DL(target)  operational (zlib, 16-level)  = 536 bits
+    effective dimension (participation ratio) = 1.76
+    spatial-entropy bits (naive i.i.d.)       = 310
+
+[2] SHAPING the shared rule by scalar-fitness ES (low bandwidth)...
+    gen    0  corr(mean rule) = 0.000
+    gen   40  corr(mean rule) = 0.160
+    gen   80  corr(mean rule) = 0.596
+    gen  120  corr(mean rule) = 0.734
+    gen  160  corr(mean rule) = 0.767
+    gen  200  corr(mean rule) = 0.805
+    gen  240  corr(mean rule) = 0.798
+    gen  280  corr(mean rule) = 0.812
+    gen  299  corr(mean rule) = 0.816
+    achieved structural corr (grown)          = 0.816  (R^2 = 0.666)
+    DL(realized morphology)                   = 200 bits
+
+[3] I-accounting (three honest measures):
+    I_channel   (selection ceiling G*log2(pop!)) = 60,885 bits
+    I_genome_eff(MDL: 3 bits x 118 live params)   = 354 bits
+    I_genome_raw(crude |theta|*32)               = 12,928 bits
+
+    GENERATIVITY GAP  Delta = DL(target) - I :
+      Delta(I_genome_eff) = 536 - 354 = +182 bits
+      Delta(I_channel   ) = 536 - 60,885 = -60,349 bits
+      Delta(I_genome_raw) = 536 - 12,928 = -12,392 bits
+
+[4] RE-COARSENING TEST (guard 2: no o(N) block holds the target):
+    (a) counting bound: a block needs s* = 16.8 cells = 17% of N to even store DL=536 bits of target
+    (b) regenerate-from-fragment (fidelity recovered from a centred block):
+        block  1x 1 (  1 cells, o(N)): recovered fidelity = 0.778
+        block  2x 2 (  4 cells, o(N)): recovered fidelity = 0.647
+        block  4x 4 ( 16 cells, o(N)): recovered fidelity = 0.626
+        block  6x 6 ( 36 cells, o(N)): recovered fidelity = 0.613
+        block  8x 8 ( 64 cells, O(N)): recovered fidelity = 0.740
+        block 12x12 (144 cells, O(N)): recovered fidelity = 0.779
+
+[5] REGENERATION (causal ablation, executed) + H4 self-repair double edge:
+    fidelity after ablate-right-half + 22 recovery steps = 0.791
+    H4: externally-imposed edit value 1.00 -> -1.11 after 12 steps (REVERTED (double edge))
+
+[6] GENERICITY (same family -> K distinct rich targets; swap test):
+    rule-i vs target-j structural-corr matrix (diag should dominate):
+      +0.81  -0.45  +0.50
+      -0.30  +0.54  -0.59
+      +0.58  -0.16  +0.90
+    mean diagonal = 0.751   mean off-diagonal = -0.071
+    => same family reaches distinct targets; it holds NO single one (diag-offd = +0.822).
+    SELECTION-cost accounting (the O2-justified measure of I):
+      to pick 1 of K=3 demonstrated targets costs log2(K) = 1.58 bits
+      Delta_selection = DL(target) - log2(K) = 536 - 1.58 = +534.4 bits  (>> 0)
+
+[7] I_c THRESHOLD SWEEP (O3): fidelity vs shaping information budget
+    G=  25  I_channel<=     3,979 bits  corr=0.137
+    G=  75  I_channel<=    11,937 bits  corr=0.408
+    G= 150  I_channel<=    23,874 bits  corr=0.799
+    G= 300  I_channel<=    47,748 bits  corr=0.828
+    (fitness bit-depth sweep at G=160 -- coarsening the per-outcome signal:)
+    per-outcome signal = 1-bit  corr=0.573
+    per-outcome signal = 2-bit  corr=0.726
+    per-outcome signal =  full  corr=0.624
+
+[done] runtime = 258.3s
+
+JSON_RESULTS_BEGIN
+{"target": {"DL_zlib_bits": 536, "eff_dim": 1.7560945062042783}, "fidelity_corr": 0.8163100669227475, "fidelity_R2": 0.6663621253594206, "accounting_channel": {"n_evals": 14400, "generations": 300, "pop": 48, "I_channel_bits": 60884.87160891008}, "I_channel_bits": 60884.87160891008, "I_genome_eff_bits": 354, "I_genome_raw_bits": 12928, "Delta_vs_genome_eff": 182, "recoarsening": {"counting": {"s_star_cells": 16.75, "N": 100, "frac_of_N": 0.1675}, "regen": [[1, 1, 0.7783201801369548], [2, 4, 0.6465195148919248], [4, 16, 0.6262686417940595], [6, 36, 0.613111243121554], [8, 64, 0.7400361432954081], [12, 144, 0.7794148308000819]]}, "regen_fidelity": 0.791106446295554, "H4_edit_before_after": [1.0, -1.1111111111111112], "genericity": {"matrix": [[0.8098675795154096, -0.45266705588861406, 0.49864494635724016], [-0.2983798244775123, 0.5404873957805042, -0.5877529564112739], [0.5775762860295914, -0.16401491778467864, 0.9038160270681692]], "diag": 0.7513903341213609, "offd": -0.07109892036254122, "selection_bits": 1.584962500721156, "Delta_selection": 534.4150374992788}, "Ic_sweep": [["25", 3978.9759956044627, 0.1374086898908676], ["75", 11936.927986813387, 0.408465989200448], ["150", 23873.855973626774, 0.7985986523085843], ["300", 47747.71194725355, 0.8278766393810101], ["q=1-bit", 25465.446371868562, 0.5727636210980913], ["q=2-bit", 25465.446371868562, 0.7257535043846333], ["q=full", 25465.446371868562, 0.6242859419085832]], "runtime_sec": 258.29437708854675}
+JSON_RESULTS_END

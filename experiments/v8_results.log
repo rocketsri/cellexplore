@@ -1,0 +1,21 @@
+==========================================================================
+v8: INTRINSIC-DIMENSION test -- can low-I ES build a codebook in COMPRESSED coords?
+==========================================================================
+grid 8x8, body |theta|=1832 (HID=32), code dim d=12, STEPS=20
+
+control (random frozen body + scalar-ES code): held-out corr = 0.218
+
+  search dim d=   32/1832: train corr=0.281  held-out corr=0.315  margin over control=+0.096  (GENERALISES)  [216s]
+  search dim d=  128/1832: train corr=0.401  held-out corr=0.423  margin over control=+0.205  (GENERALISES)  [394s]
+  search dim d=  512/1832: train corr=0.403  held-out corr=0.434  margin over control=+0.216  (GENERALISES)  [594s]
+  search dim d=      FULL: train corr=0.310  held-out corr=0.459  margin over control=+0.241  (GENERALISES)  [771s]
+
+  best COMPRESSED d=512: held-out 0.434 (margin +0.216)
+  FULL-dim ES (d=1832):            held-out 0.459 (margin +0.241)
+  => Compressed search generalises (margin +0.216), but not clearly better
+     than full-dim here; low-I codebook-building is feasible in compressed coords.
+
+[done] runtime=771s
+JSON_V8_BEGIN
+{"control": 0.21842485759807762, "rows": [[32, 0.28148553824296846, 0.31451545142825243, 0.09609059383017482], [128, 0.4013356649200099, 0.4231180255649215, 0.2046931679668439], [512, 0.40320498939532584, 0.43442446702407567, 0.21599960942599805], [1832, 0.31005269188791873, 0.45905628513659036, 0.24063142753851274]], "BODY": 1832}
+JSON_V8_END
