@@ -1,0 +1,13 @@
+CRUX seeds test | control=0.218 | d_g=108 | seeds=[0, 1, 2, 3]
+  seed 0: CPPN ho=0.317 (m +0.098) | RP ho=0.430 (m +0.212) | EDGE -0.113  [299s]
+  seed 1: CPPN ho=0.267 (m +0.049) | RP ho=0.551 (m +0.332) | EDGE -0.283  [575s]
+  seed 2: CPPN ho=0.215 (m -0.003) | RP ho=0.397 (m +0.179) | EDGE -0.182  [845s]
+  seed 3: CPPN ho=0.386 (m +0.167) | RP ho=0.179 (m -0.039) | EDGE +0.206  [1112s]
+
+  STRUCT EDGE  mean -0.093  sd 0.183  (min -0.283, 1/4 positive)
+  CPPN margin  mean +0.078  (2/4 generalise)
+  RP   margin  mean +0.171  (3/4 generalise)
+  => mixed/RP-favoured
+JSON_CRUX_BEGIN
+{"control": 0.21842485759807762, "dg": 108, "rows": [{"seed": 0, "cppn_ho": 0.3165998028126342, "rp_ho": 0.4300079286512155, "edge": -0.11340812583858129, "cppn_margin": 0.09817494521455661, "rp_margin": 0.2115830710531379}, {"seed": 1, "cppn_ho": 0.2674312357464075, "rp_ho": 0.550615263855923, "edge": -0.2831840281095155, "cppn_margin": 0.049006378148329865, "rp_margin": 0.33219040625784535}, {"seed": 2, "cppn_ho": 0.21507916529993745, "rp_ho": 0.39739476652739464, "edge": -0.18231560122745719, "cppn_margin": -0.0033456922981401627, "rp_margin": 0.17896990892931702}, {"seed": 3, "cppn_ho": 0.3857411246826466, "rp_ho": 0.17924781570887516, "edge": 0.20649330897377144, "cppn_margin": 0.16731626708456898, "rp_margin": -0.03917704188920246}], "edge_mean": -0.09310361155044562, "edge_sd": 0.1832074861662808}
+JSON_CRUX_END
