@@ -1,0 +1,22 @@
+======================================================================
+v17: OOD generalization scope of a learned dictionary (superposition)
+======================================================================
+
+dictionary learned on D0-sparse targets; tested held-out on:
+
+  in-dist (D0, sparse)    : learned=0.980  control=0.690  margin=+0.289  (genuine)
+  OOD-dict (D1, sparse)   : learned=0.703  control=0.698  margin=+0.004  (no lift over random)
+  OOD-dense (GRF)         : learned=0.679  control=0.709  margin=-0.030  (no lift over random)
+
+[interpretation]
+  in-dist margin +0.29: the dictionary recovered D0's structure and codes held-out
+    draws from the SAME model -> B1 held-out realizability holds (not memorization).
+  OOD margins (D1 +0.00, dense -0.03) ~ 0: generalization is WITHIN the
+    shaped target distribution -- B1 holds there, but transfer to a different model
+    class is narrow. Honest bound: the codebook is agnostic ACROSS the family it was
+    shaped on, not across arbitrary distributions (as expected: a dict of D0-atoms
+    cannot sparsely code D1-atoms). This matches how SAEs are dataset-specific.
+
+JSON_V17_BEGIN
+{"in-dist (D0, sparse)": {"learned": 0.9796349899781033, "control": 0.6902452106255763, "margin": 0.28938977935252697}, "OOD-dict (D1, sparse)": {"learned": 0.7028314669197518, "control": 0.6983736700091978, "margin": 0.004457796910554035}, "OOD-dense (GRF)": {"learned": 0.6787236887395783, "control": 0.7091492615931594, "margin": -0.03042557285358105}}
+JSON_V17_END
