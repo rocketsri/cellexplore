@@ -32,8 +32,8 @@ import v6_backprop_existence as bp
 
 T = torch
 
-SEEDS = [0, 1, 2, 3, 4, 5]
-KTRAIN = [6, 12, 24]
+SEEDS = [0, 1, 2]
+KTRAIN = [4, 12, 32]
 N_HELD = 6
 
 
@@ -81,7 +81,7 @@ def main():
             T.manual_seed(s)
             pool = [bp.target(s * 100 + i) for i in range(K)]
             held = [bp.target(300 + s * 10 + k) for k in range(N_HELD)]
-            net, tr = bp.train_body(pool, iters=800)
+            net, tr = bp.train_body(pool, iters=500)
             for p in net.parameters():
                 p.requires_grad_(False)
             bp_ho = np.mean([bp.fit_code(net, h) for h in held])
