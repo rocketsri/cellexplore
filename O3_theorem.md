@@ -57,6 +57,64 @@ scales with the *representation's* complexity, amortized over tasks — here, ta
 
 ---
 
+## 2A. Full proof
+
+**Precise hypotheses.**
+- **(H1) Bounded loss.** `ℓ(θ,t) = min_{c∈C} d(Φ(θ,c), t) ∈ [0,B]` for all `θ∈Θ, t∈supp(μ)` (under a
+  normalized metric `B = O(1)`).
+- **(H2) Prior-class regularity.** `Θ ⊆ ℝ^P` bounded (`‖θ−θ'‖₂ ≤ R`), and `θ ↦ d(Φ(θ,c), t)` is
+  `Λ`-Lipschitz in `θ`, uniformly over `c∈C, t∈supp(μ)`. *(Any pseudo-dimension-`P` bound on
+  `F={t↦ℓ(θ,t)}` serves equally; the Lipschitz form makes `P` the parameter count.)*
+- **(H3) i.i.d. ERM.** `t₁,…,t_m ∼ μ` i.i.d.; `L̂(θ)=(1/m)Σᵢℓ(θ,tᵢ)`; `θ̂∈argmin_Θ L̂`; `θ*∈argmin_Θ L_μ`,
+  `L*=L_μ(θ*)`.
+
+**Lemma 1 (the `min_c`, hence `K`, does not enter the complexity).** Under (H2), `θ↦ℓ(θ,t)` is `Λ`-Lipschitz
+uniformly in `t`. *Proof.* `ℓ(θ,t)=min_c g_c(θ)`, `g_c(θ):=d(Φ(θ,c),t)` each `Λ`-Lipschitz. Pick
+`c'∈argmin_c g_c(θ')`: `ℓ(θ,t) ≤ g_{c'}(θ) ≤ g_{c'}(θ')+Λ‖θ−θ'‖ = ℓ(θ',t)+Λ‖θ−θ'‖`; symmetric. ∎ The
+pointwise minimum over `C` is absorbed into `Λ` — `K=|C|` never appears (it only lowers `L*`). This is the
+formal reason `K` is a per-target *code* cost, not a *shaping* cost.
+
+**Lemma 2 (Rademacher).** Under (H1)–(H2), `R̂_S(F) ≤ c₀·ΛR·√(P/m)·√(log m)`. *Proof.* By Lemma 1 each
+`f∈F` is `Λ`-Lipschitz in `θ∈Θ⊆ℝ^P`, `diam≤R`. An `ρ/Λ`-cover of `Θ` (size `≤(3RΛ/ρ)^P`) induces an
+`ρ`-cover of `F` in `L²(S)`, so `log N(F,ρ,L²(S)) ≤ P·log(3RΛ/ρ)`. Dudley's entropy integral with `α=1/√m`
+gives `R̂_S(F)=O(ΛR√(P/m)·√(log(RΛm)))`. ∎ (Equivalently, pseudo-dimension `P` ⇒ `R̂_S(F)=O(B√(P log m/m))`.)
+
+**Upper bound.** With probability `≥1−δ`,
+`L_μ(θ̂) − L* ≤ 2R̂ + B√(2 log(2/δ)/m)`, where `R̂ = c₀ΛR√(P log m/m)`.
+*Proof.* Let `Ψ(S)=sup_{θ}(L_μ(θ)−L̂(θ))`. Changing one sample moves `Ψ` by `≤B/m` (loss range `B`), so
+McDiarmid gives, w.p. `≥1−δ/2`, `Ψ ≤ E[Ψ]+B√(log(2/δ)/(2m))`. Symmetrization: `E[Ψ]≤2E R̂_S(F)≤2R̂`. Hence
+for **all** `θ`, w.p. `≥1−δ/2`: `L_μ(θ)−L̂(θ) ≤ 2R̂ + B√(log(2/δ)/(2m))` (★). For the fixed comparator `θ*`,
+Hoeffding gives w.p. `≥1−δ/2`: `L̂(θ*)−L_μ(θ*) ≤ B√(log(2/δ)/(2m))` (★★). On the intersection
+(prob `≥1−δ`), using `L̂(θ̂)≤L̂(θ*)` (ERM):
+`L_μ(θ̂)−L* = (L_μ(θ̂)−L̂(θ̂)) + (L̂(θ̂)−L̂(θ*)) + (L̂(θ*)−L_μ(θ*)) ≤ 2R̂ + 0 + B√(2 log(2/δ)/m)`. ∎
+Setting RHS `≤ε`: **`m ≥ C₁(Λ²R²P log m + B² log(1/δ))/ε² = Θ̃(P/ε²)`**, with `Λ,R,B` substrate constants.
+
+**`D̄`- and `K`-independence (explicit).** `D̄=E_μ DL(t)` enters only through `B` (loss range) and `L*`
+(the floor); under a normalized metric `B=O(1)`, so the *excess-risk rate* `L_μ(θ̂)−L*=Õ(√(P/m))` has no
+`D̄` dependence. `K=|C|` is eliminated by Lemma 1.
+
+**Lower bound (matching, `m=Ω(P/ε²)`).** There exist substrate/target pairs requiring `Ω(P/ε²)`.
+*Construction.* Take `Θ={−γ,+γ}^P` and a decoder for which the excess risk is separable,
+`L_μ(θ)−L*=(1/P)Σ_{j=1}^P \mathbf 1[θ_j≠θ°_j]` (a hidden sign vector `θ°`), each shaped target yielding one
+observation carrying `O(1)` bits about `θ°` (a per-outcome, low-bandwidth channel — the model's own
+assumption). Reaching excess risk `ε` needs `≥(1−ε)P` correct signs; by Assouad's lemma / Fano over the
+`2^P`-packing, any estimator from `m` such observations has expected excess risk `≥cP/m`, so `m=Ω(P/ε²)` is
+necessary. `D̄` and `K` are free in this construction. ∎
+
+**Conclusion.** Up to log factors, `m=Θ(P/ε²)` shaped targets are **necessary and sufficient** for held-out
+realizability within `ε` of optimal — the rate governed by the prior complexity `P`, independent of `D̄` and
+`K`. (The upper bound is universal; the lower bound is worst-case over the prior class, so the rate is
+minimax-tight.) The corollary (§3) and side conditions (§4) then follow: amortized per-target shaping tends
+to `log₂K`, and `Δ=D̄−log₂K` is unbounded in `D̄` at fixed `P`, whenever (N1) `ℓ` is efficiently computable
+(the `min_c` tractable — statistics is fine regardless; *efficiency* needs RIP/incoherence or smooth
+`∂Φ/∂c`) and (N2) `L*` with a *random* `θ` exceeds `ε` (else the prior does no work, `Δ_eff=0`).
+
+**Remark (statistics vs. computation).** The theorem counts *shaped targets / shaping information*. (N1) is
+the only place computational tractability enters — worst-case `min_c` (code inference) can be NP-hard, so
+held-out realizability is *efficiently* achievable only under structural conditions. This separates the
+information threshold (`Θ̃(P/ε²)`, always) from the computational threshold (substrate-dependent); both were
+seen in v16 (sample-complexity turn-on at `K_train≈M`; the sparsity/decodability boundary).
+
 ## 3. The generativity corollary (why B-bio is achievable)
 
 > **Corollary (unbounded generativity at fixed shaping).**
