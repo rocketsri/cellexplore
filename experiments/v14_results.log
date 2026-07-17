@@ -1,0 +1,27 @@
+========================================================================
+v14: SUPERPOSITION / DICTIONARY codebook -- a 2nd positive generativity substrate
+========================================================================
+n=48 units, M=96 atoms (overcomplete), k=5 sparse; held-out target eff-dim=15.1 (rich)
+D_bar ~ 192 bits/target, |sparse code| ~ 53 bits
+
+control (random dictionary) held-out recon corr = 0.690
+
+K_train=  50: held-out recon corr=0.767  atom-recovery=0.01  dim_sel=11.1  [0s]
+K_train= 200: held-out recon corr=0.853  atom-recovery=0.10  dim_sel=13.7  [2s]
+K_train= 600: held-out recon corr=0.978  atom-recovery=0.89  dim_sel=15.4  [7s]
+
+LOW-I arm (non-differentiable ES, low-dim reparam): held-out recon corr=0.983 (vs control 0.690)
+
+SUMMARY:
+  held-out realizability (learned dict) = 0.978  vs control 0.690  (GENERALISES)
+  generativity Delta = D_bar - |code| = 192 - 53 = +139 bits/target
+    (measure-consistent: both coded under the shared dictionary; the dictionary is a
+     PROVEN target-agnostic codebook iff it realizes held-out targets -- which it does.)
+  low-I (non-differentiable) shaping also generalises: 0.983 > 0.690
+  => superposition is a 2nd substrate where a shared learned prior + cheap sparse
+     selection realizes held-out rich targets. Connects to SAEs/superposition in real nets.
+
+[done] 24s
+JSON_V14_BEGIN
+{"rich": 15.073269450174738, "control": 0.6902452106255763, "by_K": {"50": {"held": 0.767029234350197, "atom_recovery": 0.010416666666666666, "dim_sel": 11.126340417901549}, "200": {"held": 0.8526977349590554, "atom_recovery": 0.10416666666666667, "dim_sel": 13.714164819242974}, "600": {"held": 0.9779071560013094, "atom_recovery": 0.8854166666666666, "dim_sel": 15.406895583811282}}, "Dbar": 192, "code_bits": 52.92481250360578, "low_I_held": 0.982506931231684}
+JSON_V14_END

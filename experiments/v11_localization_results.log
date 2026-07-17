@@ -1,0 +1,65 @@
+
+LOCALIZATION SPECTRUM  --  DL-free causal fingerprint
+
+==========================================================================
+B-bio (Kuramoto Holonomy Code)
+==========================================================================
+  realized richness (eff-dim of morphology)  = 10.44   [>trivial]
+  --- localization spectrum (attractor displacement per unit rho-perturbation) ---
+    s_rule     (a) rule/genome     = 17.181
+    s_coupling (b) coupling/topo   = 18.263
+    s_state    (c) initial cond.   = 17.454
+    s_drive    (d) drive/env       = 17.171
+    healing H  (c) runtime kick    =  0.875   (1=heals/attractor, 0=persists/stored)
+    normalized localization profile [rule,coup,state,drive] = [0.25,0.26,0.25,0.25]
+  --- DL-free generativity ---
+    dim_rule (structure rule commands) = 21.06
+    dim_sel  (structure selection cmds)=  1.00
+    G = dim_rule/dim_sel               =  21.06
+  --- Levin coupling test (GENOME/alpha FIXED throughout) ---
+    start class (0, 0); transient coupling edits over 15 settings
+    coupling leverage (frac depositing a PERSISTENT new attractor) = 0.13
+    persistent new classes reached by coupling alone = [(1, 0)]
+
+==========================================================================
+Claim A (stored injected vector)
+==========================================================================
+  realized richness (eff-dim of morphology)  =  2.03   [>trivial]
+  --- localization spectrum (attractor displacement per unit rho-perturbation) ---
+    s_rule     (a) rule/genome     =  0.000
+    s_coupling (b) coupling/topo   =  0.000
+    s_state    (c) initial cond.   =  0.024
+    s_drive    (d) drive/env       =  0.000
+    healing H  (c) runtime kick    =  0.000   (1=heals/attractor, 0=persists/stored)
+    normalized localization profile [rule,coup,state,drive] = [0.00,0.00,1.00,0.00]
+  --- DL-free generativity ---
+    dim_rule (structure rule commands) =  0.00
+    dim_sel  (structure selection cmds)=  2.88
+    G = dim_rule/dim_sel               =   0.00
+
+==========================================================================
+Trivial (constant attractor)
+==========================================================================
+  realized richness (eff-dim of morphology)  =  1.00   [TRIVIAL]
+  --- localization spectrum (attractor displacement per unit rho-perturbation) ---
+    s_rule     (a) rule/genome     =  0.000
+    s_coupling (b) coupling/topo   =  0.000
+    s_state    (c) initial cond.   =  0.000
+    s_drive    (d) drive/env       =  0.000
+    healing H  (c) runtime kick    =  1.000   (1=heals/attractor, 0=persists/stored)
+    normalized localization profile [rule,coup,state,drive] = [0.00,0.00,0.00,0.00]
+  --- DL-free generativity ---
+    dim_rule (structure rule commands) =  0.00
+    dim_sel  (structure selection cmds)=  0.00
+    G = dim_rule/dim_sel               =   0.00
+
+==========================================================================
+FINGERPRINT SUMMARY
+==========================================================================
+substrate                           rich  s_rule s_state   heal       G
+-----------------------------------------------------------------------
+Kuramoto                           10.44  17.181  17.454   0.88   21.06
+StoredVec                           2.03   0.000   0.024   0.00    0.00
+Trivial                             1.00   0.000   0.000   1.00    0.00
+
+runtime 25s

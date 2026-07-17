@@ -1,0 +1,23 @@
+==========================================================================
+v11: Holonomy Code -- the K vs richness vs class-carried (eta^2) tradeoff
+==========================================================================
+(honest re-measurement after the v9 audit; see v10.md)
+
+2D torus L=16. For each disorder: K, richness(spectral-PR), eta^2 (field variance explained by the winding class):
+
+  disorder=0.10: K= 48  richness=  2.3  eta^2(class-carried)=1.000  (class carries field)
+  disorder=0.25: K= 25  richness=  2.6  eta^2(class-carried)=1.000  (class carries field)
+  disorder=0.50: K= 10  richness=  3.4  eta^2(class-carried)=1.000  (class carries field)
+  disorder=0.90: K=  1  richness= 15.8  eta^2(class-carried)=0.000  (richness is DISORDER, not class)
+  disorder=1.60: K=  1  richness= 50.9  eta^2(class-carried)=0.000  (richness is DISORDER, not class)
+
+  => No regime has BOTH high richness AND high eta^2. Low disorder: large K,
+     high eta^2, but low richness (plane waves). High disorder: high richness,
+     but eta^2 -> 0 (disorder noise, not class). The 'harmonic completion' adds no
+     genuine per-target structure: the Holonomy Code is NOT a generativity mechanism.
+     (Contrast: the NCA codebook v6-v8 PASSES held-out realizability = high eta^2.)
+
+[done] 301s
+JSON_V11_BEGIN
+{"rows": [{"dis": 0.1, "K": 48, "richness": 2.252957654382534, "eta2": 0.9999623951593181}, {"dis": 0.25, "K": 25, "richness": 2.567794940239104, "eta2": 0.9999610649510535}, {"dis": 0.5, "K": 10, "richness": 3.375388302924894, "eta2": 0.9999462294375516}, {"dis": 0.9, "K": 1, "richness": 15.791162281559382, "eta2": 0.0}, {"dis": 1.6, "K": 1, "richness": 50.93187900554228, "eta2": 0.0}]}
+JSON_V11_END

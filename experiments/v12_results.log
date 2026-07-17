@@ -1,0 +1,40 @@
+==========================================================================
+v12: multi-seed verification of the NCA codebook (held-out realizability, B1)
+==========================================================================
+HID=32, code dim=12, seeds=[0, 1, 2, 3, 4, 5], K_train=[6, 12, 24], N_held=6
+
+control (random body): held-out corr = 0.006 +/- 0.053  (n=6)
+
+  K= 6 seed=0: train=0.69 backprop-held=0.611 scalarES-held=0.460  [430s]
+  K= 6 seed=1: train=0.93 backprop-held=0.793 scalarES-held=0.569  [524s]
+  K= 6 seed=2: train=0.83 backprop-held=0.759 scalarES-held=0.574  [618s]
+  K= 6 seed=3: train=0.92 backprop-held=0.841 scalarES-held=0.606  [710s]
+  K= 6 seed=4: train=0.96 backprop-held=0.752 scalarES-held=0.397  [807s]
+  K= 6 seed=5: train=0.89 backprop-held=0.690 scalarES-held=0.442  [908s]
+  --> K=6: backprop held-out 0.741+/-0.059 | scalar-ES 0.508+/-0.062 | control 0.006+/-0.053
+  K=12 seed=0: train=0.74 backprop-held=0.615 scalarES-held=0.450  [1006s]
+  K=12 seed=1: train=0.73 backprop-held=0.721 scalarES-held=0.576  [1110s]
+  K=12 seed=2: train=0.87 backprop-held=0.830 scalarES-held=0.496  [1211s]
+  K=12 seed=3: train=0.80 backprop-held=0.750 scalarES-held=0.426  [1308s]
+  K=12 seed=4: train=0.90 backprop-held=0.676 scalarES-held=0.393  [1411s]
+  K=12 seed=5: train=0.79 backprop-held=0.694 scalarES-held=0.405  [1513s]
+  --> K=12: backprop held-out 0.714+/-0.053 | scalar-ES 0.458+/-0.050 | control 0.006+/-0.053
+  K=24 seed=0: train=0.53 backprop-held=0.428 scalarES-held=0.418  [1624s]
+  K=24 seed=1: train=0.67 backprop-held=0.521 scalarES-held=0.542  [1733s]
+  K=24 seed=2: train=0.77 backprop-held=0.709 scalarES-held=0.541  [1843s]
+  K=24 seed=3: train=0.77 backprop-held=0.806 scalarES-held=0.554  [1954s]
+  K=24 seed=4: train=0.77 backprop-held=0.582 scalarES-held=0.497  [2068s]
+  K=24 seed=5: train=0.77 backprop-held=0.805 scalarES-held=0.530  [2182s]
+  --> K=24: backprop held-out 0.642+/-0.114 | scalar-ES 0.514+/-0.037 | control 0.006+/-0.053
+
+SUMMARY (held-out realizability vs K_train, mean +/- 95% CI):
+  control (random body): 0.006 +/- 0.053
+  K= 6: backprop 0.741+/-0.059 (above control) | scalarES 0.508+/-0.062
+  K=12: backprop 0.714+/-0.053 (above control) | scalarES 0.458+/-0.050
+  K=24: backprop 0.642+/-0.114 (above control) | scalarES 0.514+/-0.037
+  B1 sufficiency signature (held-out rises with K_train): [0.741, 0.714, 0.642] -> not seen
+
+[done] runtime=2182s
+JSON_V12_BEGIN
+{"control": {"mean": 0.006345821906709011, "ci": 0.0530945946653624, "raw": [-0.03728194969395796, 0.098832322905461, -0.05537275566409031, 0.09745327197015285, -0.052642845859130226, -0.012913112218181292]}, "backprop": {"6": {"mean": 0.7409763899114395, "ci": 0.0588082580497383, "raw": [0.6113506654898325, 0.7925357321898142, 0.7590259512265524, 0.8405383825302124, 0.7522490918636322, 0.6901585161685944]}, "12": {"mean": 0.7143830437627104, "ci": 0.05306296150955334, "raw": [0.6154463067650795, 0.7206984162330627, 0.830228179693222, 0.749819427728653, 0.6760728657245636, 0.6940330664316813]}, "24": {"mean": 0.6419235749377145, "ci": 0.11398176268955243, "raw": [0.4284222076336543, 0.5211969316005707, 0.7088618824879328, 0.8059631188710531, 0.5820362567901611, 0.8050610522429148]}}, "es": {"6": {"mean": 0.5082470683587922, "ci": 0.062462970583721134, "raw": [0.46027839680512744, 0.5693932125965754, 0.5742392241954803, 0.6058428982893626, 0.3972843736410141, 0.4424443046251933]}, "12": {"mean": 0.45757414648930234, "ci": 0.05025632299626199, "raw": [0.44982091585795086, 0.5764136215051016, 0.495933676759402, 0.4259020611643791, 0.39253393063942593, 0.40484067300955456]}, "24": {"mean": 0.5135767203238275, "ci": 0.03706222578282414, "raw": [0.4179108887910843, 0.5419066399335861, 0.5409385512272517, 0.5540550053119659, 0.4970397651195526, 0.5296094715595245]}}}
+JSON_V12_END

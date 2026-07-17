@@ -1,0 +1,26 @@
+======================================================================
+v15: ASSOCIATIVE MEMORY -- generativity (held-out) vs retrieval (Claim-A)?
+======================================================================
+n=64, K=40 stored patterns (unit-norm)
+
+[A] RETRIEVAL (noisy query of STORED pattern, beta=8.0): corr = 0.912 (works as a memory)
+[B] HELD-OUT UNRELATED (new random target; optimize key): corr = 0.476
+    => memory output x* is ALWAYS in span(stored); a target with an out-of-span
+       component is UNREACHABLE. Low corr = RETRIEVAL = CLAIM-A (no generativity).
+[C] HELD-OUT COMPOSITIONAL (target in span(stored), beta=1.0): corr = 0.692
+    => reachable IFF the target is a COMBINATION of stored atoms. This is
+       generativity of the COMPOSITIONAL/superposition kind = the v14 dictionary
+       mechanism (stored patterns = atoms, softmax key = the sparse/soft code).
+
+ADJUDICATION:
+  retrieval (stored)            = 0.912
+  held-out UNRELATED            = 0.476  (CLAIM-A / retrieval only)
+  held-out COMPOSITIONAL        = 0.692  (weak)
+  => Verdict: plain associative memory is RETRIEVAL (Claim-A) -- it realizes only
+     stored patterns / in-span combinations, NOT out-of-span held-out targets. Where
+     it DOES generalize (compositional/in-span), it IS the superposition/dictionary
+     substrate (v14), not a new mechanism. Registry: NOT a distinct 2nd positive.
+
+JSON_V15_BEGIN
+{"retrieval": 0.9115194046762438, "held_out_unrelated": 0.4761340244582537, "held_out_compositional": 0.6918761436722365}
+JSON_V15_END

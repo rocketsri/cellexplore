@@ -1,0 +1,70 @@
+==========================================================================
+v11: TYPE-B DEFECTION vs the HOLONOMY CODE (loop-integral readout)
+==========================================================================
+
+Honest locked field: class w=1, edge diffs ~ +0.262 +- 0.000 (uniform twist 2*pi/N=0.262)
+Monitors: branch-cut flag |diff|>pi-0.25=2.89; clean-codeword flag std(diff)>0.25
+
+[A] SELF-REPORT SCALAR readout (faithful-report architecture, distance 1)
+    aggregate mean cos(theta): honest=-0.0000, 1 Type-B liar (worst node, true=-1.00) reports +1.0 -> +0.0833 (shift +0.0833; max single-liar reach = 2/N = 0.083)
+    relational/consistency flags raised: 0  ->  lie ACCEPTED SILENTLY. This is the H3 failure no coupling architecture defends (v1 3.2).
+
+[B] LOOP-INTEGRAL readout, single Type-B unit tries to flip the class
+    a bounded lie (in-band, no edge crosses +-pi): reported winding 1 == true 1  (TELESCOPES AWAY -- coboundary-invariant)
+    to actually flip the class (w=0), the liar must shift by -3.14, which strains an incident edge to |diff|max=2.88 (~pi)
+    -> branch-cut defect flags raised: 0 (>0); clean-codeword monitor: FAIL (detected)
+    => a single-unit Type-B lie that shifts the class is NOT faithful-looking:
+       it necessarily creates a phase-slip defect. Type-B -> Type-A (visible).
+
+[C] COLLUSION SWEEP: k contiguous colluders try a CLEAN class flip (w=1 -> 0)
+    (measure: min achievable max-edge-strain, and clean-codeword pass, vs k)
+    k :  minmax|diff|  branch-flags  clean-codeword?   verdict
+     1:   2.880        0           no               flips but DEFECT (detected)
+     2:   1.833        0           no               flips but DEFECT (detected)
+     3:   1.309        0           no               flips but DEFECT (detected)
+     4:   0.995        0           no               flips but DEFECT (detected)
+     6:   0.636        0           no               flips but DEFECT (detected)
+     8:   0.436        0           no               flips but DEFECT (detected)
+    12:   0.262        0           yes              CLEAN flip (undetected)
+    16:   0.262        0           yes              CLEAN flip (undetected)
+    20:   0.262        0           yes              CLEAN flip (undetected)
+    23:   0.000        0           yes              CLEAN flip (undetected)
+    24:   0.241        0           yes              CLEAN flip (undetected)
+    (at the v9 tolerance 0.25, min-k for a 'clean enough' flip = 12)
+
+[C'] min colluders for an UNDETECTED clean flip, vs codeword-monitor tolerance:
+     (a partial coalition injects per-edge de-twist ~2*pi/k; a stricter monitor
+      rejects smaller strain -> forces larger k, up to the full systole = N)
+     tolerance 0.40: min colluders for undetected clean flip = 7   (partial)
+     tolerance 0.25: min colluders for undetected clean flip = 12   (partial)
+     tolerance 0.15: min colluders for undetected clean flip = 18   (partial)
+     tolerance 0.08: min colluders for undetected clean flip = 21   (partial)
+     tolerance 0.03: min colluders for undetected clean flip = 23   (partial)
+     => as the monitor -> strict, min-collusion -> systole(G) = N = 24 (the code distance).
+        toric-code logical-operator weight = B3 code distance = self-repair radius.
+
+[D] TRUE-DYNAMICS test: the lie is a genuine TRUE-state divergence
+    (a subset actually holds divergent true phases; relax under real coupling)
+    k= 1 true-divergent units: relaxed class 1 -> 1  clean=True  HEALED (liar expelled, class kept)
+    k= 2 true-divergent units: relaxed class 1 -> 1  clean=True  HEALED (liar expelled, class kept)
+    k= 4 true-divergent units: relaxed class 1 -> 0  clean=True  CLASS SLIP -> 0 (real Type-A change)
+    k= 8 true-divergent units: relaxed class 1 -> 1  clean=True  HEALED (liar expelled, class kept)
+    k=12 true-divergent units: relaxed class 1 -> 0  clean=True  CLASS SLIP -> 0 (real Type-A change)
+    => a persistent divergent-TRUE-state with a clean-class field is impossible:
+       sub-threshold divergence is corrected (self-repair pulls the liar back);
+       supra-threshold divergence is a REAL, visible class change. No hidden Type-B.
+
+==========================================================================
+VERDICT: the loop-integral readout is Type-B-resistant up to the code distance
+  = systole(G). Below distance: any lie that shifts the class is a visible phase-
+  slip defect (Type-B transmuted to Type-A, which robust aggregation handles).
+  At/above distance: a coordinated systole-sized cut installs a clean new codeword
+  (residual exposure = code distance, same bound as error correction / B3).
+  Self-reported scalar readout has distance 1 (one liar, silent). The asymmetry is
+  structural: winding is a relational H^1 pairing owned by no unit; a scalar is a
+  0-cochain each unit owns. (missing-self/MHC; ELK/deceptive alignment; toric code.)
+==========================================================================
+
+JSON_V11_BEGIN
+{"A_scalar_shift_one_liar": 0.083324651271858, "A_scalar_flags": 0, "B_single_flip_shift": -3.141592653589793, "B_single_flip_maxstrain": 2.8797932795977133, "B_single_flip_branchcut_flags": 0, "B_single_flip_clean": false, "C_sweep": {"1": {"minmax_strain": 2.879793265790644, "branch_flags": 0, "clean": false, "reached": true}, "2": {"minmax_strain": 1.8325957145940466, "branch_flags": 0, "clean": false, "reached": true}, "3": {"minmax_strain": 1.3089969389957474, "branch_flags": 0, "clean": false, "reached": true}, "4": {"minmax_strain": 0.9948376736367681, "branch_flags": 0, "clean": false, "reached": true}, "6": {"minmax_strain": 0.635798513226506, "branch_flags": 0, "clean": false, "reached": true}, "8": {"minmax_strain": 0.43633231299858277, "branch_flags": 0, "clean": false, "reached": true}, "12": {"minmax_strain": 0.26179938779915, "branch_flags": 0, "clean": true, "reached": true}, "16": {"minmax_strain": 0.26179938779915, "branch_flags": 0, "clean": true, "reached": true}, "20": {"minmax_strain": 0.26179938779914913, "branch_flags": 0, "clean": true, "reached": true}, "23": {"minmax_strain": 8.881784197001252e-16, "branch_flags": 0, "clean": true, "reached": true}, "24": {"minmax_strain": 0.24085543677521715, "branch_flags": 0, "clean": true, "reached": true}}, "Cprime_tol_min_k": {"0.4": 7, "0.25": 12, "0.15": 18, "0.08": 21, "0.03": 23}, "C_systole": 24, "D_true_dynamics": {"1": {"after": 1, "clean": true}, "2": {"after": 1, "clean": true}, "4": {"after": 0, "clean": true}, "8": {"after": 1, "clean": true}, "12": {"after": 0, "clean": true}}}
+JSON_V11_END
