@@ -85,6 +85,14 @@ the full ~1800-dim search is unnecessary). *(v16.md, v8.md.)*
 Together: **O2 (need `≥ log₂K`) + B1 (sufficient iff held-out) + O3 (achievable when `m ≳ C` and the
 selection is decodable)** is a full quantitative characterization of when B-bio generativity is achievable.
 
+**General O3 theorem (`O3_theorem.md`).** Building the codebook is a *meta-learning* problem, so its
+low-bandwidth build cost is `m = Θ̃(P/ε²)` shaped targets where `P` is the **prior's** complexity —
+*independent of the target complexity `D̄` and repertoire `K`*. Hence `Δ = D̄ − log₂K` is **unbounded in
+`D̄` at fixed shaping** whenever `P ≪ D̄` (a low-complexity prior generating high-complexity targets),
+subject to two side conditions: the selection must be **decodable** (tractable code inference) and
+**non-trivial** (a random prior must not already cover `μ`). This is *why* B-bio is generic, and it
+recovers v16 (dictionary: `P ↔ M log M`) and v8 (NCA: `P ↔` intrinsic dim `~10²`).
+
 ---
 
 ## 5. Two independently-verified positive substrates
