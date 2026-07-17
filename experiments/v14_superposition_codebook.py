@@ -101,11 +101,15 @@ def learn_dict_grad(X, M, iters=60, k=5, seed=0):
         used = (np.abs(S) > 1e-6).any(1)
         Phi = X @ np.linalg.pinv(S)
         Phi = unit_cols(np.nan_to_num(Phi))
-        # re-seed dead atoms from worst-reconstructed samples
-        if (~used).any():
+        # re-seed dead atoms from worst-reconstructed samples (or random if too few)
+        ndead = int((~used).sum())
+        if ndead:
             err = np.linalg.norm(X - Phi @ S, axis=0)
-            worst = np.argsort(-err)[: (~used).sum()]
-            Phi[:, ~used] = unit_cols(X[:, worst] + 0.01 * rng.standard_normal((n, (~used).sum())))
+            m = min(ndead, X.shape[1])
+            worst = np.argsort(-err)[:m]
+            newcols = rng.standard_normal((n, ndead))
+            newcols[:, :m] = X[:, worst]
+            Phi[:, ~used] = unit_cols(newcols + 0.01 * rng.standard_normal((n, ndead)))
     return Phi
 
 

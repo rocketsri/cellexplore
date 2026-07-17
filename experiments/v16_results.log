@@ -1,0 +1,31 @@
+========================================================================
+v16: empirical I_c PHASE BOUNDARY for a generalizing codebook (superposition)
+========================================================================
+n=48 units, M=96 atoms.  RIP/OMP sparse-recovery guide: k_max ~ n/(2 ln(M/n)) = 34.6
+dictionary identifiability needs K_train >> M=96.
+
+held-out realizability (learned dict), rows=k, cols=K_train:
+   k \ K_train      24     48     96    192    384    768   |  ctrl
+   k=3             0.64   0.69   0.82   0.86   0.95   0.97   |  0.60
+   k=5             0.72   0.75   0.83   0.82   0.89   0.99   |  0.69
+   k=8             0.80   0.79   0.88   0.87   0.88   0.92   |  0.80
+   k=12            0.88   0.87   0.91   0.92   0.93   0.93   |  0.88
+
+phase boundary K_train*(k) = smallest K_train with held-out > control + 0.10:
+   k=3 : K_train* = 96  (ratio K*/M = 1.0)
+   k=5 : K_train* = 96  (ratio K*/M = 1.0)
+   k=8 : K_train* = 768  (ratio K*/M = 8.0)
+   k=12: K_train* > 768  (no generalization in range -- above recovery threshold)
+
+[interpretation] Two thresholds bound achievability (the empirical I_c):
+  (i)  SAMPLE complexity: held-out generalization appears only once K_train exceeds
+       ~a few x M (dictionary identifiability) -- a clean sample-complexity threshold.
+  (ii) SPARSE-RECOVERY: for k above the OMP/RIP limit, no amount of K_train recovers
+       the codebook (the selection is not decodable). This is O3's 'fails' regime.
+  => achievable generativity requires BOTH enough shaping data (K_train >> M) AND a
+     selection sparse enough to be decodable (k below the recovery threshold).
+
+[done] 120s
+JSON_V16_BEGIN
+{"3": {"K": [24, 48, 96, 192, 384, 768], "held": [0.6367487084611011, 0.6875062070127783, 0.8220114044633057, 0.855059106420269, 0.9538164010611787, 0.9746142293951593], "control": 0.602557151126167}, "5": {"K": [24, 48, 96, 192, 384, 768], "held": [0.7174336794550815, 0.7472407596991677, 0.8295579245335067, 0.822914120163938, 0.8941914076146358, 0.9866384917277887], "control": 0.6902452106255763}, "8": {"K": [24, 48, 96, 192, 384, 768], "held": [0.7998328749818795, 0.7947547531257058, 0.8766114176755601, 0.8727725805886578, 0.8814312643289812, 0.920378101236674], "control": 0.7979512468813805}, "12": {"K": [24, 48, 96, 192, 384, 768], "held": [0.8769292681035106, 0.8696239985380094, 0.9148148002825046, 0.9209447462716938, 0.9304138048553785, 0.9309813008680067], "control": 0.8799434266053356}}
+JSON_V16_END
