@@ -470,6 +470,93 @@ plt.tight_layout(); plt.show()
 """))
 
 cells.append(md("""
+## 7b. Coherence error and the target-structure trap (`bridge_analysis.md` P5/P6/P8)
+
+Escape probability (everything above) is independent of the target $T$. The *coherence error* from a bridge
+attack is not — it scales with $(T_i - T_j)$ across the cut bridges, so it depends entirely on whether the
+target is modular in **content** or only in **topology**.
+
+Predicted (`bridge_analysis.md` P8): attack-budget ratio $\\approx 23\\times$ for a module-coherent target but
+only $\\approx 1.9\\times$ for an i.i.d. target. **Every existing script in `experiments/` uses i.i.d. targets**,
+which would measure the small number and wrongly conclude the vulnerability is negligible. Both are tested here.
+
+Also tests P6: the fraction of error energy that is a rigid module-mean ("DC") offset — predicted 0.86–0.93 for
+bridge attacks vs 0.07–0.10 for random intra-module attacks, an >8x discriminator.
+"""))
+
+cells.append(code(r"""
+def coherence_experiment(M=8, m=8, deg_in=4, b=1, D=4, seed=9, n_targets=200):
+    rng = np.random.default_rng(seed)
+    n = M * m
+    lo, hi, _ = modular_graph(M, m, deg_in, b, rng)
+    isb = bridge_mask(lo, hi, m); b_idx = np.where(isb)[0]; i_idx = np.where(~isb)[0]
+
+    def fixed_point(lo_, hi_, T):
+        W_, deg_ = build_sparse(lo_, hi_, n)
+        Lt = lambda v: deg_.unsqueeze(1) * v - torch.sparse.mm(W_, v)
+        eta = T + (KAPPA / MU) * Lt(T)                 # Theorem 4 calibration on the INTACT graph
+        # solve (mu I + kappa L') x = mu eta   by CG (block RHS)
+        x = torch.zeros_like(eta); r = MU * eta - (MU * x + KAPPA * Lt(x)); p = r.clone()
+        rs = (r * r).sum()
+        for _ in range(20000):
+            Ap = MU * p + KAPPA * Lt(p)
+            alpha = rs / (p * Ap).sum()
+            x = x + alpha * p; r = r - alpha * Ap
+            rs_new = (r * r).sum()
+            if torch.sqrt(rs_new) < 1e-10: break
+            p = r + (rs_new / rs) * p; rs = rs_new
+        return x, eta
+
+    def run(T, drop):
+        keep = np.setdiff1d(np.arange(len(lo)), drop)
+        W0, d0 = build_sparse(lo, hi, n)
+        Lt0 = lambda v: d0.unsqueeze(1) * v - torch.sparse.mm(W0, v)
+        eta = T + (KAPPA / MU) * Lt0(T)
+        W1, d1 = build_sparse(lo[keep], hi[keep], n)
+        Lt1 = lambda v: d1.unsqueeze(1) * v - torch.sparse.mm(W1, v)
+        x = torch.zeros_like(eta); r = MU * eta - (MU * x + KAPPA * Lt1(x)); p = r.clone(); rs = (r*r).sum()
+        for _ in range(20000):
+            Ap = MU * p + KAPPA * Lt1(p); alpha = rs / (p * Ap).sum()
+            x = x + alpha * p; r = r - alpha * Ap; rs_new = (r*r).sum()
+            if torch.sqrt(rs_new) < 1e-10: break
+            p = r + (rs_new / rs) * p; rs = rs_new
+        err = x - T
+        rel = (err.norm() / T.norm()).item()
+        mod_of = torch.tensor(np.arange(n) // m, device=DEV)
+        dc = torch.zeros_like(err)
+        for k in range(M):
+            sel = mod_of == k
+            dc[sel] = err[sel].mean(0, keepdim=True)
+        dc_share = ((dc.norm() ** 2) / (err.norm() ** 2 + 1e-30)).item()
+        return rel, dc_share
+
+    for name, mk in [("module-coherent T", lambda: torch.tensor(
+                          np.repeat(rng.normal(0, 1, (M, D)), m, axis=0) + 0.1 * rng.normal(0, 1, (n, D)),
+                          dtype=DTYPE, device=DEV)),
+                     ("i.i.d. T (legacy convention)", lambda: torch.tensor(
+                          rng.normal(0, 1, (n, D)), dtype=DTYPE, device=DEV))]:
+        T = mk()
+        tgt2 = rng.choice(b_idx, size=min(2, len(b_idx)), replace=False)
+        rel_t, dc_t = run(T, tgt2)
+        # find the random-intra budget that matches this damage
+        matched, lo_b, hi_b = None, 1, len(i_idx)
+        for B in [1, 2, 4, 8, 16, 24, 32, 45, 60, 80, len(i_idx)]:
+            rel_r, _ = run(T, rng.choice(i_idx, size=min(B, len(i_idx)), replace=False))
+            if rel_r >= rel_t:
+                matched = B; break
+        _, dc_r = run(T, rng.choice(i_idx, size=min(24, len(i_idx)), replace=False))
+        ratio = (matched / 2) if matched else float('inf')
+        print(f"{name}:")
+        print(f"   2 targeted bridge cuts -> rel err {rel_t:.3f}   (DC share {dc_t:.3f})")
+        print(f"   random intra edges needed to match: ~{matched}  ->  BUDGET RATIO ~ {ratio:.1f}x")
+        print(f"   DC share for a random-intra attack: {dc_r:.3f}\n")
+
+coherence_experiment()
+print("Predicted (bridge_analysis.md P8): ~23x coherent vs ~1.9x i.i.d.")
+print("Predicted (P6): DC share 0.86-0.93 bridge vs 0.07-0.10 random intra.")
+"""))
+
+cells.append(md("""
 ## 8. Summary
 
 Fill this in from the runs above. The specific things to record, and what each would mean:
