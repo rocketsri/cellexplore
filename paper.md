@@ -84,6 +84,59 @@ Corruption containment is roughly 8x better in the modular design at the single-
 
 What survives both corrections: whole-graph (cross-module) connectivity is deliberately low ($\lambda_2=0.039$) while within-module connectivity is roughly an order of magnitude higher, so the qualitative inversion of the single-graph trade-off found in Section 3.3 holds. The quantitative claims (8x, and "faster local repair") do not, as stated, and are corrected above. **Theorem 6 (informal, empirically grounded).** A topology with dense intra-module and sparse inter-module coupling achieves simultaneously (i) local repair speed at least as fast as a comparable non-modular graph (via high within-module $\lambda_2$) and (ii) strong containment of module-scale corruption or defection (via low cross-module escape probability), where a single homogeneous graph cannot achieve both, because $\lambda_2$ (fast repair) and hitting time to any boundary (denoising robustness) move in opposite directions under a single, uniform coupling structure. **This resolves Section 3.3's tension as an artifact of architectural choice, not a fundamental property of the energy-coupling framework** — and the resolution is not a novel trick invented for this paper: it is Simon's (1962) near-decomposability principle, and the specific structure real biological tissue already uses (compartmentalized organs and tissue boundaries, with gap-junction coupling density that is not uniform but concentrated within a tissue type). A caveat, not swept aside: the sparse inter-module bridges are themselves now a concentrated vulnerability — network-science work on cascading failures in modular systems shows that damage to the *bridges* specifically (rather than within-module nodes) can be disproportionately damaging to global coordination, a cost this experiment does not test and which any deployment would need to budget for.
 
+## 3.6b Scaling law for the modular advantage — and a correction to how it should be read
+
+`§5.6` asked whether the compartmentalization advantage grows with $N$. It does not, in general — the answer
+depends on *how* you scale, and the natural reading is the one that fails.
+
+**Closed-form law.** Recasting Theorem 5 as a leaky resistor network (every edge a conductance $\kappa w_{ij}$,
+every free node leaking to ground through $\mu$, corrupted nodes clamped to 1 V) makes the module reduction
+exact. Writing $r_c$ for the local spreading resistance of a module — available in closed form from the Kesten
+tree resolvent for random $d$-regular modules — the mean escape probability for clean modules is
+$$\bar s \;\approx\; \frac{2fb\kappa}{m\mu\,(1+\kappa r_c)},$$
+validated to $\pm2\%$ across $M\in[8,96]$, $m\in[8,128]$, $d\in[3,8]$, $b\in[1,4]$, $\mu/\kappa\in[0.1,1]$.
+Two immediate consequences: $\bar s$ depends on $(\mu,\kappa)$ **only through $\mu/\kappa$** (exact), and — since
+the non-modular baseline is $N$-independent (confirmed by a cavity/BP calculation accurate to $<1\%$, and by
+direct measurement flat in $N$) — the advantage ratio obeys
+$$R \;\approx\; \frac{\mu(1+\kappa r_c)}{2\kappa}\cdot\frac{s_{\text{reg}}(f)}{f}\cdot\frac{m}{b}.$$
+
+> **$R$ is governed by $m/b$ — module size per bridge — and is not a function of $N$ at all.**
+
+**The three scaling regimes therefore genuinely differ, and conflating them would be an error.** Verified
+independently (this implementation, degree-matched, $f=1/8$, $d=4$, $b=1$), against predictions derived from
+the law above:
+
+| regime | measured $R$ | predicted |
+|---|---|---|
+| **(a)** $M{=}8$ fixed, $m$ grows ($N=64\to512$) | $6.22\to13.88\to27.27\to53.39$; $R/N = 0.097, 0.108, 0.107, 0.104$ | $R\propto N$, $R/N\to0.102\pm0.005$ ✓ |
+| **(b)** $m{=}8$ fixed, $M$ grows ($N=64\to512$) | $6.22\to8.01\to7.97\to7.29$ — **flat** | $R\to$ const ✓ |
+| **(c)** $m=M=\sqrt N$ | — | $R\propto\sqrt N$ |
+
+**The unflattering reading, stated plainly.** "Scale the architecture by adding more modules" — the natural
+engineering reading of scaling this design — buys **no asymptotic containment improvement whatever**. Only
+growing modules (or, equivalently, diluting bridges against module volume) helps. This is a sharper and less
+favourable answer than "modularity helps more at scale", and it supersedes the preliminary impression from a
+small early sweep that the advantage simply grows with system size.
+
+**Optimal module size depends entirely on the threat model, and §5.6's conjectured trade-off mostly does not exist.**
+- *Exogenous correlated budget* (adversary compromises $c$ nodes, the "compromised subsystem" case): $m^\star = c$
+  **exactly** — a kink minimum, not a stationary point, independent of $d,b,\mu,\kappa$ at leading order.
+  Design rule: **size modules to the expected compromise budget, never larger.**
+- *Endogenous* (a module is itself the unit of compromise): $\bar s$ is **independent of $m$** — a bigger module
+  has the same $2b$ bridges injecting the same current into the same clean population. Containment is a fixed
+  additive cost that cannot be traded against blast radius, so $D(m)$ is strictly increasing and $m^\star$ is
+  minimal. **The trade-off §5.6 hypothesized does not exist in this objective**; module size should be set by
+  repair-speed/latency requirements, not containment.
+- *Unconstrained adversary*: scattering the same budget rather than filling modules costs the defender 3–5x more,
+  and the modular graph converges to the non-modular value. **The 7.5x headline is entirely conditional on
+  corruption respecting module boundaries** — the same threat-model boundary §3.5 already drew for clustered vs.
+  scattered corruption, and it applies to §3.6 too.
+
+**Why modularity dissolves the §3.3 tension, now as a one-line independence claim rather than an observation:**
+within-module $\lambda_2 \ge d - 2\sqrt{d-1} - \epsilon$ (Friedman, whp) depends only on $d$; cross-module escape
+$\lesssim 2fb\kappa/(m\mu(1+\kappa r_c(d)))$ depends only on $b/m$. **In a homogeneous graph one parameter $d$
+controls both; in a modular graph $d$ and $b/m$ are independent knobs.** That is precisely Theorem 6.
+
 ## 3.7 Bridge vulnerability, resolved (was `§5.5`, previously flagged untested)
 
 The compartmentalized design's sparse inter-module bridges were flagged as a concentrated, untested vulnerability. A dedicated analysis (see `bridge_analysis.md`) settles this. Summary of what is now established:
@@ -116,12 +169,13 @@ What we add: (i) the closed form for this specific composed energy, including th
 
 ## 5. What's still needed for a fully rigorous submission
 
-1. **The small residual $N$-dependence for the grid at fixed coverage fraction (Section 3.4) is not fully explained.** Escape probability rose slightly (not the flat result the corrected local-density theory would most simply predict) as $N$ grew from 36 to 400. The local-density explanation accounts for why it doesn't *fall* (ruling out the original, wrong "bigger domain buffers better" intuition), but a precise account of the small residual rise — plausibly a boundary-node-count effect (more distinct scattered O-nodes reachable, not just a fixed nearest one, as $N$ grows at fixed density) — is stated as a hypothesis here, not proven.
+1. **The 7.5x headline is conditional on corruption respecting module boundaries** (Section 3.6b, threat model T3): under a scattering adversary the modular graph converges to the non-modular value and modularity provides almost no protection. This is the single most important caveat on the design recommendation, and it mirrors the clustered-vs-scattered boundary in Section 3.5.
+2. **The small residual $N$-dependence for the grid at fixed coverage fraction (Section 3.4) is not fully explained.** Escape probability rose slightly (not the flat result the corrected local-density theory would most simply predict) as $N$ grew from 36 to 400. The local-density explanation accounts for why it doesn't *fall* (ruling out the original, wrong "bigger domain buffers better" intuition), but a precise account of the small residual rise — plausibly a boundary-node-count effect (more distinct scattered O-nodes reachable, not just a fixed nearest one, as $N$ grows at fixed density) — is stated as a hypothesis here, not proven.
 2. **A genuine multi-pattern extension** — the current construction (Theorem 1's strict convexity) provably supports only a single learned target per unit; extending to multiple recallable patterns requires relaxing to non-convex, multi-well local energies, reopening the basin-of-attraction analysis flagged in the earlier discussion, and is left as the natural next step rather than addressed here.
 3. **A task beyond synthetic Gaussian patterns** — testing completion/denoising on a real structured dataset would be necessary to claim practical, not just mathematical, relevance.
 4. ~~A formal treatment of the ablation-robustness/denoising-robustness tension~~ — **resolved.** Empirically by Section 3.6, then *proven* by Theorem 8's containment sum rule (upper-bounding escape by cut size / free-set size) paired with the Alon–Boppana floor on within-module $\lambda_2$. Theorem 6 is no longer informal.
 5. ~~The bridge-vulnerability caveat is untested~~ — **tested and resolved in Section 3.7**, with the anticipated mechanism (consensus collapse) *falsified* by the paper's own Theorem 2 (capped at 11.6%) and replaced by the correct one (steady-state cross-module bias). What remains open: the Type-B-defector-at-a-bridge-endpoint conjecture (~5x corruption gain), which is stated but untested.
-6. **Module size and count were not optimized or swept** at scale. Partially addressed: Theorem 8's degree-zero homogeneity in $(b,m)$ identifies a co-scaling ray along which containment is exactly invariant, and a preliminary sweep finds damage monotone in $m$ (favouring small modules) under one stated objective. A full sweep at $N\gg400$ is in `experiments/gpu_scaling_experiments.ipynb` and not yet run.
+6. ~~Module size and count were not optimized or swept~~ — **resolved in Section 3.6b.** A closed-form law ($\bar s \approx 2fb\kappa/(m\mu(1+\kappa r_c))$, validated to $\pm2\%$) shows the advantage ratio is governed by $m/b$, not $N$; all three scaling regimes are derived and independently verified. Optimal module size is threat-model-dependent: $m^\star=c$ under an exogenous correlated budget, minimal under the endogenous reading (where the conjectured trade-off does not exist), and nearly irrelevant under an unconstrained adversary.
 7. **The degree-matching and per-module-$\lambda_2$ corrections in Section 3.6 mean the headline 8x is not a clean controlled measurement.** A degree-matched re-run at multiple $N$ is required before any specific factor is quoted quantitatively.
 
 All experiment code referenced here (`v2_completion_test.py`, `v2_eqprop_trained_validation.py`, `v2_symmetry_cost_experiment.py`, `v2_causal_consistent_training.py`, `v2_escape_probability_verify.py`, `v2_scaling_topology_experiment.py`, `v2_reorientation_test.py`) is in the repository's `experiments/` directory.
